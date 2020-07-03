@@ -119,9 +119,13 @@ namespace AsmResolver.PE.Imports
         /// <inheritdoc />
         public override string ToString()
         {
+            string prefix = DeclaringModule is null 
+                ? string.Empty 
+                : $"{DeclaringModule.Name}!";
+            
             return IsImportByOrdinal
-                ? $"#{Ordinal} ({Address:X8})"
-                : $"{Name} ({Address:X8})";
+                ? $"{prefix}#{Ordinal} ({Address:X8})"
+                : $"{prefix}{Name} ({Address:X8})";
         }
 
     }
