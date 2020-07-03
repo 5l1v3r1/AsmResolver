@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using AsmResolver.Collections;
 using AsmResolver.PE.File;
 
 namespace AsmResolver.PE.Imports
@@ -97,16 +98,10 @@ namespace AsmResolver.PE.Imports
         /// This method is called to initialize the value of <see cref="Symbols" /> property.
         /// </remarks>
         /// <returns>The members list.</returns>
-        protected virtual IList<ImportedSymbol> GetSymbols()
-        {
-            return new List<ImportedSymbol>();
-        }
+        protected virtual IList<ImportedSymbol> GetSymbols() => 
+            new OwnedCollection<IImportedModule, ImportedSymbol>(this);
 
         /// <inheritdoc />
-        public override string ToString()
-        {
-            return $"{Name} ({Symbols.Count} symbols)";
-        }
-        
+        public override string ToString() => $"{Name} ({Symbols.Count} symbols)";
     }
 }

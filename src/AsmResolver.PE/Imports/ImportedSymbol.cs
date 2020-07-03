@@ -16,13 +16,14 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 using System;
+using AsmResolver.Collections;
 
 namespace AsmResolver.PE.Imports
 {
     /// <summary>
     /// Represents one member of an external module that was imported into a PE image.
     /// </summary>
-    public class ImportedSymbol
+    public class ImportedSymbol : IOwnedCollectionElement<IImportedModule>
     {
         private ushort _ordinalOrHint;
         private string _name;
@@ -47,6 +48,21 @@ namespace AsmResolver.PE.Imports
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }
 
+        /// <summary>
+        /// Gets the module that defines the symbol.
+        /// </summary>
+        public IImportedModule DeclaringModule
+        {
+            get;
+            private set;
+        }
+
+        IImportedModule IOwnedCollectionElement<IImportedModule>.Owner
+        {
+            get => DeclaringModule;
+            set => DeclaringModule = value;
+        }
+        
         /// <summary>
         /// Gets or sets the ordinal of the member that was imported.
         /// </summary>
@@ -107,6 +123,6 @@ namespace AsmResolver.PE.Imports
                 ? $"#{Ordinal} ({Address:X8})"
                 : $"{Name} ({Address:X8})";
         }
-        
+
     }
 }
