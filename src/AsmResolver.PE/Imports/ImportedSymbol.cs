@@ -100,7 +100,7 @@ namespace AsmResolver.PE.Imports
         /// <summary>
         /// Gets or sets the entry in the import address table (IAT). 
         /// </summary>
-        public ulong Address
+        public ISegmentReference AddressTableEntry
         {
             get;
             set;
@@ -124,8 +124,8 @@ namespace AsmResolver.PE.Imports
                 : $"{DeclaringModule.Name}!";
             
             return IsImportByOrdinal
-                ? $"{prefix}#{Ordinal} ({Address:X8})"
-                : $"{prefix}{Name} ({Address:X8})";
+                ? $"{prefix}#{Ordinal} ({AddressTableEntry.Rva:X8})"
+                : $"{prefix}{Name} ({AddressTableEntry.Rva:X8})";
         }
 
     }
