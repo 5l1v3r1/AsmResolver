@@ -45,15 +45,28 @@ namespace AsmResolver.DotNet.Builder
         }
 
         /// <inheritdoc />
-        public IPEImage CreateImage(ModuleDefinition module) => new PEImage
+        public IPEImage CreateImage(ModuleDefinition module)
         {
-            MachineType = module.MachineType,
-            PEKind = module.PEKind,
-            Characteristics = module.FileCharacteristics,
-            SubSystem = module.SubSystem,
-            DllCharacteristics = module.DllCharacteristics,
-            DotNetDirectory = DotNetDirectoryFactory.CreateDotNetDirectory(module),
-            Resources = module.NativeResourceDirectory,
-        };
+            var peImage = new PEImage
+            {
+                MachineType = module.MachineType,
+                PEKind = module.PEKind,
+                Characteristics = module.FileCharacteristics,
+                SubSystem = module.SubSystem,
+                DllCharacteristics = module.DllCharacteristics,
+                Resources = module.NativeResourceDirectory,
+            };
+            
+            var prototype = DotNetDirectoryFactory.CreatePrototype(module);
+
+            peImage.DotNetDirectory = prototype.ConstructedDirectory;
+            
+            foreach (var importedModule in prototype.GetNativeImports())
+                peImage.Imports.Add(importedModule);
+            foreach (var relocation in prototype.GetNativeRelocations())
+                peImage.Relocations.Add(relocation);
+            
+            return peImage;
+        }
     }
 }

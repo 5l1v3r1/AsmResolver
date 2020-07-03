@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AsmResolver.DotNet.Builder.Metadata;
 using AsmResolver.DotNet.Builder.Resources;
 using AsmResolver.DotNet.Code;
@@ -20,14 +21,15 @@ namespace AsmResolver.DotNet.Builder
         /// <param name="module">The module for which this .NET directory is built.</param>
         /// <param name="methodBodySerializer">The method body serializer to use for constructing method bodies.</param>
         /// <param name="metadata">The metadata builder </param>
-        public DotNetDirectoryBuffer(ModuleDefinition module, IMethodBodySerializer methodBodySerializer, IMetadataBuffer metadata)
+        public DotNetDirectoryBuffer(
+            ModuleDefinition module, IMethodBodySerializer methodBodySerializer, IMetadataBuffer metadata)
         {
-            Module = module;
-            MethodBodySerializer = methodBodySerializer;
-            Metadata = metadata;
+            Module = module ?? throw new ArgumentNullException(nameof(module));
+            MethodBodySerializer = methodBodySerializer ?? throw new ArgumentNullException(nameof(methodBodySerializer));
+            Metadata = metadata ?? throw new ArgumentNullException(nameof(metadata));
             Resources = new DotNetResourcesDirectoryBuffer();
         }
-        
+
         /// <summary>
         /// Gets the module for which this .NET directory is built.
         /// </summary>

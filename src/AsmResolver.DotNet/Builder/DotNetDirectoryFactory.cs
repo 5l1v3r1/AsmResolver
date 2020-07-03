@@ -3,7 +3,6 @@ using AsmResolver.DotNet.Builder.Discovery;
 using AsmResolver.DotNet.Builder.Metadata;
 using AsmResolver.DotNet.Code;
 using AsmResolver.DotNet.Code.Cil;
-using AsmResolver.PE.DotNet;
 using AsmResolver.PE.DotNet.Metadata.Blob;
 using AsmResolver.PE.DotNet.Metadata.Guid;
 using AsmResolver.PE.DotNet.Metadata.Strings;
@@ -56,7 +55,7 @@ namespace AsmResolver.DotNet.Builder
         } = new CilMethodBodySerializer();
 
         /// <inheritdoc />
-        public virtual IDotNetDirectory CreateDotNetDirectory(ModuleDefinition module)
+        public virtual DotNetImagePrototype CreatePrototype(ModuleDefinition module)
         {
             // Find all members in the module.
             var discoveryResult = DiscoverMemberDefinitionsInModule(module);
@@ -99,7 +98,10 @@ namespace AsmResolver.DotNet.Builder
             // Finalize module.
             buffer.FinalizeModule(module);
 
-            return buffer.CreateDirectory();
+            return new DotNetImagePrototype
+            {
+                ConstructedDirectory = buffer.CreateDirectory()
+            };
         }
 
         private MemberDiscoveryResult DiscoverMemberDefinitionsInModule(ModuleDefinition module)
