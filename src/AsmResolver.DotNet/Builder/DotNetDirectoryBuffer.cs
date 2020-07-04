@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AsmResolver.DotNet.Builder.Metadata;
 using AsmResolver.DotNet.Builder.Resources;
 using AsmResolver.DotNet.Code;
+using AsmResolver.DotNet.Code.Native;
 using AsmResolver.PE.DotNet;
 using AsmResolver.PE.DotNet.Metadata.Tables;
 using AsmResolver.PE.DotNet.Metadata.Tables.Rows;
@@ -15,15 +16,19 @@ namespace AsmResolver.DotNet.Builder
     /// </summary>
     public partial class DotNetDirectoryBuffer
     {
+        private readonly INativeSymbolsProvider _symbolsProvider;
+
         /// <summary>
         /// Creates a new .NET data directory buffer.
         /// </summary>
+        /// <param name="symbolsProvider"></param>
         /// <param name="module">The module for which this .NET directory is built.</param>
         /// <param name="methodBodySerializer">The method body serializer to use for constructing method bodies.</param>
         /// <param name="metadata">The metadata builder </param>
-        public DotNetDirectoryBuffer(
-            ModuleDefinition module, IMethodBodySerializer methodBodySerializer, IMetadataBuffer metadata)
+        public DotNetDirectoryBuffer(INativeSymbolsProvider symbolsProvider, ModuleDefinition module,
+            IMethodBodySerializer methodBodySerializer, IMetadataBuffer metadata)
         {
+            _symbolsProvider = symbolsProvider ?? throw new ArgumentNullException(nameof(symbolsProvider));
             Module = module ?? throw new ArgumentNullException(nameof(module));
             MethodBodySerializer = methodBodySerializer ?? throw new ArgumentNullException(nameof(methodBodySerializer));
             Metadata = metadata ?? throw new ArgumentNullException(nameof(metadata));

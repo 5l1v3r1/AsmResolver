@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using AsmResolver.DotNet.Code;
+using AsmResolver.DotNet.Code.Native;
 using AsmResolver.PE.DotNet;
 using AsmResolver.PE.Imports;
 using AsmResolver.PE.Relocations;
@@ -9,10 +11,26 @@ namespace AsmResolver.DotNet.Builder
     /// Provides a prototype for a .NET PE image, containing a .NET data directory, as well as any extra information
     /// that needs to be added to the final PE image.
     /// </summary>
-    public class DotNetImagePrototype
+    public class DotNetImagePrototype : INativeSymbolsProvider
     {
         private readonly IDictionary<string, ImportedModule> _imports = new Dictionary<string, ImportedModule>();
         private readonly IList<BaseRelocation> _relocations = new List<BaseRelocation>();
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="DotNetImagePrototype"/> class.
+        /// </summary>
+        /// <param name="isDll">Indicates whether the final PE image is supposed to be a dynamically linked library.</param>
+        public DotNetImagePrototype(bool isDll)
+        {
+            ImageBase = isDll ? 0x10000000u : 0x00400000u;
+        }
+
+        /// <inheritdoc />
+        public uint ImageBase
+        {
+            get;
+            set;
+        }
         
         /// <summary>
         /// Gets or sets the constructed .NET data directory.
@@ -35,11 +53,7 @@ namespace AsmResolver.DotNet.Builder
         /// </summary>
         public IEnumerable<BaseRelocation> GetNativeRelocations() => _relocations;
 
-        /// <summary>
-        /// Adds a single symbol to the prototype.
-        /// </summary>
-        /// <param name="symbol">The symbol to import.</param>
-        /// <returns>The imported symbol.</returns>
+        /// <inheritdoc />
         public ImportedSymbol ImportSymbol(ImportedSymbol symbol)
         {
             if (!_imports.TryGetValue(symbol.DeclaringModule.Name, out var module))
@@ -55,10 +69,7 @@ namespace AsmResolver.DotNet.Builder
             return clonedSymbol;
         }
 
-        /// <summary>
-        /// Adds a base relocation to the prototype.
-        /// </summary>
-        /// <param name="relocation">The relocation.</param>
-        public void AddBaseRelocation(BaseRelocation relocation) => _relocations.Add(relocation);
+        /// <inheritdoc />
+        public void RegisterBaseRelocation(BaseRelocation relocation) => _relocations.Add(relocation);
     }
 }

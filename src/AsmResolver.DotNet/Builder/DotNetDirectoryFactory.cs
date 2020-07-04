@@ -57,11 +57,13 @@ namespace AsmResolver.DotNet.Builder
         /// <inheritdoc />
         public virtual DotNetImagePrototype CreatePrototype(ModuleDefinition module)
         {
+            var prototype = new DotNetImagePrototype(module.IsILLibrary);
+            
             // Find all members in the module.
             var discoveryResult = DiscoverMemberDefinitionsInModule(module);
 
             // Creat new .NET dir buffer.
-            var buffer = CreateDotNetDirectoryBuffer(module);
+            var buffer = CreateDotNetDirectoryBuffer(prototype, module);
             buffer.DefineModule(module);
 
             // When specified, import existing AssemblyRef, ModuleRef, TypeRef and MemberRef prior to adding any other
@@ -98,10 +100,8 @@ namespace AsmResolver.DotNet.Builder
             // Finalize module.
             buffer.FinalizeModule(module);
 
-            return new DotNetImagePrototype
-            {
-                ConstructedDirectory = buffer.CreateDirectory()
-            };
+            prototype.ConstructedDirectory = buffer.CreateDirectory();
+            return prototype;
         }
 
         private MemberDiscoveryResult DiscoverMemberDefinitionsInModule(ModuleDefinition module)
@@ -124,10 +124,11 @@ namespace AsmResolver.DotNet.Builder
             return MemberDiscoverer.DiscoverMembersInModule(module, discoveryFlags);
         }
 
-        private DotNetDirectoryBuffer CreateDotNetDirectoryBuffer(ModuleDefinition module)
+        private DotNetDirectoryBuffer CreateDotNetDirectoryBuffer(
+            DotNetImagePrototype prototype, ModuleDefinition module)
         {
             var metadataBuffer = CreateMetadataBuffer(module);
-            return new DotNetDirectoryBuffer(module, MethodBodySerializer, metadataBuffer);
+            return new DotNetDirectoryBuffer(prototype, module, MethodBodySerializer, metadataBuffer);
         }
 
         private IMetadataBuffer CreateMetadataBuffer(ModuleDefinition module)

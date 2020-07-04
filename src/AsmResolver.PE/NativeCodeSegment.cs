@@ -8,6 +8,17 @@ namespace AsmResolver.PE
     public class NativeCodeSegment : SegmentBase
     {
         /// <summary>
+        /// Creates a new native code segment, that is relative to a certain image base.
+        /// </summary>
+        /// <param name="imageBase">The image base address this native code targets.</param>
+        /// <param name="nativeCode">The raw native code stream.</param>
+        public NativeCodeSegment(uint imageBase, byte[] nativeCode)
+        {
+            NativeCode = nativeCode;
+            ImageBase = imageBase;
+        }
+
+        /// <summary>
         /// Gets or sets the raw native code stream. 
         /// </summary>
         public byte[] NativeCode

@@ -1,14 +1,12 @@
 using System.Collections.Generic;
 using AsmResolver.PE;
-using AsmResolver.PE.Imports;
-using AsmResolver.PE.Relocations;
 
 namespace AsmResolver.DotNet.Code.Native
 {
     /// <summary>
     /// Represents a method body of a method defined in a .NET assembly, implemented using native assembler code.
     /// </summary>
-    public class NativeMethodBody : IMethodBody
+    public class NativeMethodBody :  IMethodBody
     {
         /// <summary>
         /// Creates a new empty native method body.
@@ -22,23 +20,14 @@ namespace AsmResolver.DotNet.Code.Native
         /// </summary>
         /// <param name="nativeCode">The raw native code stream.</param>
         public NativeMethodBody(byte[] nativeCode)
-            : this(new DataSegment(nativeCode))
-        {
-        }
-
-        /// <summary>
-        /// Creates a new native method body with the provided native code segment.
-        /// </summary>
-        /// <param name="nativeCode">The segment containing the native code stream.</param>
-        public NativeMethodBody(ISegment nativeCode)
         {
             NativeCode = nativeCode;
         }
-        
+
         /// <summary>
         /// Gets or sets the native code (or data) stream to be executed.
         /// </summary>
-        public ISegment NativeCode
+        public byte[] NativeCode
         {
             get;
             set;

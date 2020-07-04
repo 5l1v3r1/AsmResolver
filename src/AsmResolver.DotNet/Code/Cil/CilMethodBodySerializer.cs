@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using AsmResolver.DotNet.Code.Native;
 using AsmResolver.DotNet.Signatures;
 using AsmResolver.PE.DotNet.Cil;
 using AsmResolver.PE.DotNet.Metadata.Tables;
@@ -37,7 +38,8 @@ namespace AsmResolver.DotNet.Code.Cil
         } = null;
         
         /// <inheritdoc />
-        public ISegmentReference SerializeMethodBody(IMetadataTokenProvider provider, MethodDefinition method)
+        public ISegmentReference SerializeMethodBody(
+            INativeSymbolsProvider symbolsProvider, IMetadataTokenProvider tokenProvider, MethodDefinition method)
         {
             if (method.CilMethodBody == null)
                 return SegmentReference.Null;
@@ -51,11 +53,11 @@ namespace AsmResolver.DotNet.Code.Cil
                 body.Instructions.CalculateOffsets();
             
             // Serialize CIL stream.
-            var code = BuildRawCodeStream(provider, body);
+            var code = BuildRawCodeStream(tokenProvider, body);
             
             // Build method body.
             var rawBody = body.IsFat 
-                ? BuildFatMethodBody(provider, body, code) 
+                ? BuildFatMethodBody(tokenProvider, body, code) 
                 : BuildTinyMethodBody(code);
 
             return new SegmentReference(rawBody);

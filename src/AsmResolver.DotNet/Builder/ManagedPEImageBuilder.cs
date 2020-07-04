@@ -54,12 +54,13 @@ namespace AsmResolver.DotNet.Builder
                 Characteristics = module.FileCharacteristics,
                 SubSystem = module.SubSystem,
                 DllCharacteristics = module.DllCharacteristics,
-                Resources = module.NativeResourceDirectory,
+                Resources = module.NativeResourceDirectory
             };
             
             var prototype = DotNetDirectoryFactory.CreatePrototype(module);
 
             peImage.DotNetDirectory = prototype.ConstructedDirectory;
+            peImage.ImageBase = prototype.ImageBase;
             
             foreach (var importedModule in prototype.GetNativeImports())
                 peImage.Imports.Add(importedModule);

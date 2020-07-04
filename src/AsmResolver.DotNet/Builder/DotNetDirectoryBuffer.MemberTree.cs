@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using AsmResolver.DotNet.Builder.Metadata;
 using AsmResolver.PE.DotNet.Metadata.Tables;
 using AsmResolver.PE.DotNet.Metadata.Tables.Rows;
 
@@ -379,7 +378,7 @@ namespace AsmResolver.DotNet.Builder
                 
                 var row = definitionTable[newToken.Rid];
                 definitionTable[newToken.Rid] = new MethodDefinitionRow(
-                    MethodBodySerializer.SerializeMethodBody(this, method),
+                    MethodBodySerializer.SerializeMethodBody(_symbolsProvider, this, method),
                     row.ImplAttributes,
                     row.Attributes,
                     row.Name,
