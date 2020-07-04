@@ -13,7 +13,7 @@ namespace AsmResolver.DotNet.Code.Cil
     /// <summary>
     /// Represents a method body of a method defined in a .NET assembly, implemented using the Common Intermediate Language (CIL). 
     /// </summary>
-    public class CilMethodBody : MethodBody, ICilOperandResolver
+    public class CilMethodBody : IMethodBody, ICilOperandResolver
     {
          /// <summary>
         ///     Creates a CIL method body from a dynamic method.

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using AsmResolver.PE;
 using AsmResolver.PE.Imports;
 using AsmResolver.PE.Relocations;
 
@@ -7,7 +8,7 @@ namespace AsmResolver.DotNet.Code.Native
     /// <summary>
     /// Represents a method body of a method defined in a .NET assembly, implemented using native assembler code.
     /// </summary>
-    public class NativeMethodBody : MethodBody
+    public class NativeMethodBody : IMethodBody
     {
         /// <summary>
         /// Creates a new empty native method body.
@@ -46,17 +47,9 @@ namespace AsmResolver.DotNet.Code.Native
         /// <summary>
         /// Gets a collection of symbols that are required by the native code.
         /// </summary>
-        public IList<ImportedSymbol> ImportedSymbols
+        public IList<ImportAddressFixup> ImportAddressFixups
         {
             get;
-        } = new List<ImportedSymbol>();
-
-        /// <summary>
-        /// Gets a collection of relocations that the native code requires to be applied at runtime.
-        /// </summary>
-        public IList<BaseRelocation> Relocations
-        {
-            get;
-        } = new List<BaseRelocation>();
+        } = new List<ImportAddressFixup>();
     }
 }

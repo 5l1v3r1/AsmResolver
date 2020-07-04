@@ -23,7 +23,7 @@ namespace AsmResolver.DotNet.Serialized
         } = true;
         
         /// <inheritdoc />
-        public MethodBody ReadMethodBody(MethodDefinition owner, MethodDefinitionRow row)
+        public IMethodBody ReadMethodBody(MethodDefinition owner, MethodDefinitionRow row)
         {
             try
             {

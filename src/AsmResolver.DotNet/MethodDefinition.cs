@@ -28,7 +28,7 @@ namespace AsmResolver.DotNet
         private readonly LazyVariable<string> _name;
         private readonly LazyVariable<TypeDefinition> _declaringType;
         private readonly LazyVariable<MethodSignature> _signature;
-        private readonly LazyVariable<MethodBody> _methodBody;
+        private readonly LazyVariable<IMethodBody> _methodBody;
         private readonly LazyVariable<ImplementationMap> _implementationMap;
         private readonly LazyVariable<MethodSemantics> _semantics;
         private IList<ParameterDefinition> _parameterDefinitions;
@@ -47,7 +47,7 @@ namespace AsmResolver.DotNet
             _name  =new LazyVariable<string>(GetName);
             _declaringType = new LazyVariable<TypeDefinition>(GetDeclaringType);
             _signature = new LazyVariable<MethodSignature>(GetSignature);
-            _methodBody = new LazyVariable<MethodBody>(GetBody);
+            _methodBody = new LazyVariable<IMethodBody>(GetBody);
             _implementationMap = new LazyVariable<ImplementationMap>(GetImplementationMap);
             _semantics = new LazyVariable<MethodSemantics>(GetSemantics);
         }
@@ -526,7 +526,7 @@ namespace AsmResolver.DotNet
         /// <see cref="ImplAttributes"/>.
         /// </para>
         /// </remarks>
-        public MethodBody MethodBody
+        public IMethodBody MethodBody
         {
             get => _methodBody.Value;
             set => _methodBody.Value = value;
@@ -702,7 +702,7 @@ namespace AsmResolver.DotNet
         /// <remarks>
         /// This method is called upon initialization of the <see cref="MethodBody"/> property.
         /// </remarks>
-        protected virtual MethodBody GetBody() => null;
+        protected virtual IMethodBody GetBody() => null;
 
         /// <summary>
         /// Obtains the platform invoke information assigned to the method.
