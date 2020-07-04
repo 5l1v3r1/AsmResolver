@@ -5,7 +5,7 @@ namespace AsmResolver.PE
     /// <summary>
     /// Represents a chunk of native code.
     /// </summary>
-    public class NativeCodeSegment : SegmentBase
+    public class NativeCodeSegment : SegmentBase, IReadableSegment
     {
         /// <summary>
         /// Creates a new native code segment, that is relative to a certain image base.
@@ -63,5 +63,8 @@ namespace AsmResolver.PE
 
             writer.FileOffset = endOffset;
         }
+
+        /// <inheritdoc />
+        public IBinaryStreamReader CreateReader(uint fileOffset, uint size) => new ByteArrayReader(NativeCode);
     }
 }

@@ -40,12 +40,14 @@ namespace AsmResolver.DotNet.Code
         }
 
         /// <inheritdoc />
-        public ISegmentReference SerializeMethodBody(INativeSymbolsProvider symbolsProvider, IMetadataTokenProvider tokenProvider,
+        public ISegmentReference SerializeMethodBody(
+            INativeSymbolsProvider symbolsProvider, 
+            IMetadataTokenProvider tokenProvider,
             MethodDefinition method)
         {
-            var serializer = method.IsNative
-                ? UnmanagedSerializer
-                : ManagedSerializer;
+            var serializer = method.MethodBody is CilMethodBody
+                ? ManagedSerializer
+                : UnmanagedSerializer;
             
             return serializer.SerializeMethodBody(symbolsProvider, tokenProvider, method);
         }

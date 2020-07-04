@@ -177,8 +177,15 @@ namespace AsmResolver.DotNet
         {
             if (type is null)
                 throw new ArgumentNullException(nameof(type));
+            
             if (type.Module == TargetModule)
-                return type;
+            {
+                if (!(type is CustomModifierTypeSignature customModifier)
+                    || customModifier.ModifierType.Module == TargetModule)
+                {
+                    return type;
+                }
+            }
 
             return type.AcceptVisitor(this);
         }

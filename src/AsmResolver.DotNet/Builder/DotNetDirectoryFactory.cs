@@ -3,6 +3,7 @@ using AsmResolver.DotNet.Builder.Discovery;
 using AsmResolver.DotNet.Builder.Metadata;
 using AsmResolver.DotNet.Code;
 using AsmResolver.DotNet.Code.Cil;
+using AsmResolver.DotNet.Code.Native;
 using AsmResolver.PE.DotNet.Metadata.Blob;
 using AsmResolver.PE.DotNet.Metadata.Guid;
 using AsmResolver.PE.DotNet.Metadata.Strings;
@@ -21,6 +22,9 @@ namespace AsmResolver.DotNet.Builder
         /// </summary>
         public DotNetDirectoryFactory()
         {
+            MethodBodySerializer = new MultiMethodBodySerializer(
+                new CilMethodBodySerializer(),
+                new NativeMethodBodySerializer());
         }
         
         /// <summary>
@@ -52,7 +56,7 @@ namespace AsmResolver.DotNet.Builder
         {
             get;
             set;
-        } = new CilMethodBodySerializer();
+        }
 
         /// <inheritdoc />
         public virtual DotNetImagePrototype CreatePrototype(ModuleDefinition module)
