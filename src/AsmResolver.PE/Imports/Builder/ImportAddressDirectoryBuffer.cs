@@ -30,6 +30,9 @@ namespace AsmResolver.PE.Imports.Builder
                 newRva += size;
             }
         }
-        
+
+        /// <inheritdoc />
+        protected override ThunkTableBuffer CreateThunkTable() => 
+            new ThunkTableBuffer(HintNameTable, Is32Bit, true);
     }
 }

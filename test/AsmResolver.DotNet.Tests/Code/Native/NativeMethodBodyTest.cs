@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using AsmResolver.DotNet.Code.Cil;
@@ -6,10 +7,12 @@ using AsmResolver.DotNet.Code.Native;
 using AsmResolver.DotNet.Signatures;
 using AsmResolver.DotNet.Signatures.Types;
 using AsmResolver.PE;
+using AsmResolver.PE.DotNet.Builder;
 using AsmResolver.PE.DotNet.Cil;
 using AsmResolver.PE.DotNet.Metadata.Strings;
 using AsmResolver.PE.DotNet.Metadata.Tables;
 using AsmResolver.PE.DotNet.Metadata.Tables.Rows;
+using AsmResolver.PE.Imports;
 using AsmResolver.Tests.Runners;
 using Xunit;
 
@@ -110,5 +113,31 @@ namespace AsmResolver.DotNet.Tests.Code.Native
                 .RebuildAndRun(_module, "Print1337.exe", "1337");
         }
 
+        [Fact]
+        public void Import()
+        {
+            var nativeCode = new byte[]
+            {
+                0x51,                                // push ecx 
+                0xff, 0x15, 0x00, 0x00, 0x00, 0x00,  // push dword [rva_printf]
+                0xc3                                 // ret
+            };
+            
+            var msvcrt = new ImportedModule("msvcrt.dll");
+            var printf = new ImportedSymbol(0, "printf");
+            msvcrt.Symbols.Add(printf);
+
+            _method.MethodBody = new NativeMethodBody(nativeCode)
+            {
+                ImportAddressFixups = {new ImportAddressFixup(printf, 3)}
+            };
+            
+            var image = _module.ToPEImage();
+            Assert.Contains(image.Imports, m => 
+                m.Name == msvcrt.Name && m.Symbols.Any(s => s.Name == printf.Name));
+
+            using var fs = File.Create("/home/washi/Desktop/output.exe");
+            new ManagedPEFileBuilder().CreateFile(image).Write(new BinaryStreamWriter(fs));
+        }
     }
 }
