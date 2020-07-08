@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using AsmResolver.DotNet.Builder;
+using AsmResolver.DotNet.Cloning;
 using AsmResolver.DotNet.Signatures;
 using AsmResolver.DotNet.TestCases.NestedClasses;
 using AsmResolver.PE.DotNet.Metadata.Tables;
@@ -248,6 +249,5 @@ namespace AsmResolver.DotNet.Tests
             var newContents = (IReadableSegment) newData.Contents;
             Assert.Equal(entryData, newContents.ToArray());
         }
-
     }
 }

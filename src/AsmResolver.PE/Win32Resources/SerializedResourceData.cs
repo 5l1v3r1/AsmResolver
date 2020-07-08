@@ -1,20 +1,3 @@
-// AsmResolver - Executable file format inspection library 
-// Copyright (C) 2016-2019 Washi
-// 
-// This library is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 3.0 of the License, or (at your option) any later version.
-// 
-// This library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-// Lesser General Public License for more details.
-// 
-// You should have received a copy of the GNU Lesser General Public
-// License along with this library; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
 using System;
 using AsmResolver.PE.File;
 
@@ -39,7 +22,6 @@ namespace AsmResolver.PE.Win32Resources
         /// Reads a resource data entry from the provided input stream.
         /// </summary>
         /// <param name="peFile">The PE file containing the resource.</param>
-        /// <param name="dataReader">The instance responsible for reading and interpreting the data.</param>
         /// <param name="entry">The entry to read.</param>
         /// <param name="entryReader">The input stream to read the data from.</param>
         public SerializedResourceData(PEFile peFile, ResourceDirectoryEntry entry, IBinaryStreamReader entryReader)

@@ -309,7 +309,10 @@ namespace AsmResolver.DotNet.Cloning
         private Constant CloneConstant(MemberCloneContext context, Constant constant)
         {
             return constant != null
-                ? new Constant(constant.Type, new DataBlobSignature(constant.Value.Data))
+                ? new Constant(constant.Type, 
+                    constant.Value is null 
+                    ? null
+                    : new DataBlobSignature(constant.Value.Data))
                 : null;
         }
 
@@ -325,6 +328,8 @@ namespace AsmResolver.DotNet.Cloning
         private GenericParameter CloneGenericParameter(MemberCloneContext context, GenericParameter parameter)
         {
             var clonedParameter = new GenericParameter(parameter.Name, parameter.Attributes);
+
+            clonedParameter.Number = parameter.Number;
 
             foreach (var constraint in parameter.Constraints)
                 clonedParameter.Constraints.Add(CloneGenericParameterConstraint(context, constraint));
