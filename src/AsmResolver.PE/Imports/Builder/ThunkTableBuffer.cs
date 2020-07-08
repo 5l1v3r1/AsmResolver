@@ -82,7 +82,7 @@ namespace AsmResolver.PE.Imports.Builder
             if (Is32Bit)
                 writer.WriteUInt32(0);
             else
-                writer.WriteUInt16(0);
+                writer.WriteUInt64(0);
         }
         
     }
